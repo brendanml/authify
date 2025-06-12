@@ -2,7 +2,7 @@
 // sessionMiddleware.ts
 import dotenv from 'dotenv';
 dotenv.config();
-import { newUserSchema } from "../schemas/userSchema";
+import { newUserSchema, loginUserSchema } from "../schemas/userSchema";
 import { Request, Response, NextFunction } from 'express';
 
 ///////
@@ -14,6 +14,18 @@ import { Request, Response, NextFunction } from 'express';
 export const newUserParser = (req: Request, _res: Response, next: NextFunction) => {
   try {
     newUserSchema.parse(req.body);
+    console.log('Parsed body:', req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+}
+
+// loginUserParser.ts
+
+export const loginUserParser = (req: Request, _res: Response, next: NextFunction) => {
+  try {
+    loginUserSchema.parse(req.body);
     console.log('Parsed body:', req.body);
     next();
   } catch (error: unknown) {
@@ -63,6 +75,13 @@ export const logger = (req: Request, _res: Response, next: NextFunction) => {
 
   console.log('=============================\n');
   next();
+}
+
+// errorHandler.ts
+
+export const errorHandler = (err: Error, _req: Request, _res: Response, _next: NextFunction) => {
+  console.error('Error occurred:', err.message);
+  // res.status(500).json({ error: err.message });
 }
 
 

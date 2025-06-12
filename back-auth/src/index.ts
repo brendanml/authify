@@ -1,14 +1,21 @@
 import express from 'express';
-import { sessionMiddleware, logger } from './middleware/middleware';
+import { sessionMiddleware, logger, errorHandler } from './middleware/middleware';
 
 import { connectRedis } from './utils/redis';
 import { connectDb } from './utils/db';
+
+import passport from 'passport';
 
 import userRouter from './routes/authRouter';
 
 const app = express();
 
 app.use(express.json());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//
 
 (async () => {
   await connectDb();
@@ -27,6 +34,9 @@ app.use(logger);
 
 app.use('/api/auth', userRouter);
 
+// ERROR HANDLING
+app.use(errorHandler);
+// START SERVER
 app.listen(3005, () => {
   console.log('Server is running on http://localhost:3005');
 });

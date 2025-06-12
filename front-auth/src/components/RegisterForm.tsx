@@ -7,11 +7,11 @@ import {createUser} from "../services/UserService"
 import { newUserSchema } from "../schemas/userSchema";
 
 
+
 // shadcn components
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
+import { Checkbox } from "@/components/ui/checkbox"
 
 
 function RegisterForm() {
@@ -30,6 +30,7 @@ function RegisterForm() {
       username: "",
       email: "",
       password: "",
+      consent: false, // Default value for consent checkbox
     },
   })
 
@@ -46,7 +47,7 @@ function RegisterForm() {
   }
     return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-md p-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={form.control}
           name="username"
@@ -54,11 +55,8 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Username..." {...field} />
+                <Input placeholder="Enter your username." {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -70,11 +68,9 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email..." {...field} />
+                <Input placeholder="Enter your email." {...field} />
               </FormControl>
-              <FormDescription>
-                This is your email address. It will not be shared with anyone.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -86,16 +82,31 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Password..." type="password"{...field} />
+                <Input placeholder="Enter your password." type="password"{...field} />
               </FormControl>
-              <FormDescription>
-                You will use this to login, do not be share it with anyone.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="consent"
+          render={({ field }) => (
+            <FormItem className="flex space-x-2">
+              <FormControl>
+                <Checkbox
+                  id="consent"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel htmlFor="consent" className="cursor-pointer text-xs text-[var(--color-text-background)] text-left">
+                By registering, I consent to the processing of my personal information in accordance with the Privacy Policy.
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="rounded-full w-full h-12 text-md">Sign up</Button>
       </form>
     </Form>
   )

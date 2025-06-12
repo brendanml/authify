@@ -1,19 +1,18 @@
 "use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 
-import {createUser} from "../services/UserService"
-import { newUserSchema } from "../schemas/userSchema";
+import {loginUser} from "../services/UserService"
+import { loginUserSchema } from "../schemas/userSchema";
+import { useNavigate } from "react-router-dom"
 
 
 // shadcn components
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,46 +24,30 @@ import { Input } from "@/components/ui/input"
 
 
 function LoginForm() {
+  const navigate = useNavigate()
 
-  const form = useForm<z.infer<typeof newUserSchema>>({
-    resolver: zodResolver(newUserSchema),
+  const form = useForm<z.infer<typeof loginUserSchema>>({
+    resolver: zodResolver(loginUserSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof newUserSchema>) =>{
+  const onSubmit = async (values: z.infer<typeof loginUserSchema>) =>{
     console.log(values)
     try {
-      const response = await createUser(values)
-      console.log('User created successfully:', response)
+      const response = await loginUser(values)
+      console.log('User logged in successfully:', response)
       // Optionally, you can reset the form or redirect the user
-      form.reset()
+      navigate('/')
     } catch (error) {
       console.error('Error creating user:', error)
     }
   }
     return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-md p-6">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Username..." {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={form.control}
           name="email"
@@ -74,9 +57,9 @@ function LoginForm() {
               <FormControl>
                 <Input placeholder="Email..." {...field} />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 This is your email address. It will not be shared with anyone.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -90,14 +73,14 @@ function LoginForm() {
               <FormControl>
                 <Input placeholder="Password..." type="password"{...field} />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 You will use this to login, do not be share it with anyone.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button className="rounded-full w-full h-12 text-md" type="submit">Log in</Button>
       </form>
     </Form>
   )

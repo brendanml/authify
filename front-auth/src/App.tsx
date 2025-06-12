@@ -1,7 +1,8 @@
 
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import AuthPage from './pages/AuthPage'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
 
 
 const App = () =>{
@@ -13,7 +14,8 @@ const App = () =>{
         <Routes>
           <Route path="/about" element={<h1>About</h1>} />
           <Route path="/contact" element={<h1>Contact</h1>} />
-          <Route path="/signup" element={<AuthPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<HomePage/>} />
         </Routes>
       </BrowserRouter>
     </>
